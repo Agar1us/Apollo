@@ -52,7 +52,9 @@ class OpenAIChatFNLLM:
         callbacks: WorkflowCallbacks | None = None,
         cache: PipelineCache | None = None,
     ) -> None:
-        model_config = _create_openai_config(config, azure=False)
+        tmp_config = config.model_copy()
+        tmp_config.encoding_model = 'cl100k_base'
+        model_config = _create_openai_config(tmp_config, azure=False)
         error_handler = _create_error_handler(callbacks) if callbacks else None
         model_cache = _create_cache(cache, name)
         client = create_openai_client(model_config)
