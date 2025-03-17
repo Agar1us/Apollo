@@ -7,7 +7,7 @@ from collections.abc import Iterable
 
 import nltk
 import tiktoken
-
+from transformers import AutoTokenizer
 from graphrag.config.models.chunking_config import ChunkingConfig
 from graphrag.index.operations.chunk_text.typing import TextChunk
 from graphrag.index.text_splitting.text_splitting import (
@@ -19,12 +19,18 @@ from graphrag.logger.progress import ProgressTicker
 
 def get_encoding_fn(encoding_name):
     """Get the encoding model."""
-    enc = tiktoken.get_encoding(encoding_name)
+    try:
+        enc = tiktoken.get_encoding(encoding_name)
+    except ValueError:
+        enc = AutoTokenizer.from_pretrained(encoding_name)
 
     def encode(text: str) -> list[int]:
         if not isinstance(text, str):
             text = f"{text}"
-        return enc.encode(text)
+        if isinstance(enc, tiktoken.Encoding):
+            return enc.encode(text)
+        else:
+            return enc.encode(text, add_special_tokens=False)
 
     def decode(tokens: list[int]) -> str:
         return enc.decode(tokens)
@@ -41,7 +47,6 @@ def run_tokens(
     tokens_per_chunk = config.size
     chunk_overlap = config.overlap
     encoding_name = config.encoding_model
-
     encode, decode = get_encoding_fn(encoding_name)
     return split_multiple_texts_on_tokens(
         input,

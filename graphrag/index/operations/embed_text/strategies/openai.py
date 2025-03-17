@@ -75,7 +75,7 @@ def _get_splitter(
     config: LanguageModelConfig, batch_max_tokens: int
 ) -> TokenTextSplitter:
     return TokenTextSplitter(
-        encoding_name=config.encoding_model,
+        model_name=config.encoding_model,
         chunk_size=batch_max_tokens,
     )
 

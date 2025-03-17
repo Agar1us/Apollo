@@ -58,8 +58,8 @@ def create_extract_graph_prompt(
 
     tokens_left = (
         max_token_count
-        - num_tokens_from_string(prompt, encoding_name=encoding_model)
-        - num_tokens_from_string(entity_types, encoding_name=encoding_model)
+        - num_tokens_from_string(prompt, model=encoding_model)
+        - num_tokens_from_string(entity_types, model=encoding_model)
         if entity_types
         else 0
     )
@@ -80,7 +80,7 @@ def create_extract_graph_prompt(
         )
 
         example_tokens = num_tokens_from_string(
-            example_formatted, encoding_name=encoding_model
+            example_formatted, model=encoding_model
         )
 
         # Ensure at least three examples are included
