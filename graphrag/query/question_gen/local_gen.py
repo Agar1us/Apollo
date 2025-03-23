@@ -7,8 +7,7 @@ import logging
 import time
 from typing import Any, cast
 
-import tiktoken
-
+from graphrag.language_model.tokenizer import SingletonTokenizer
 from graphrag.callbacks.llm_callbacks import BaseLLMCallback
 from graphrag.language_model.protocol.base import ChatModel
 from graphrag.prompts.query.question_gen_system_prompt import QUESTION_SYSTEM_PROMPT
@@ -32,7 +31,7 @@ class LocalQuestionGen(BaseQuestionGen):
         self,
         model: ChatModel,
         context_builder: LocalContextBuilder,
-        token_encoder: tiktoken.Encoding | None = None,
+        token_encoder: SingletonTokenizer | None = None,
         system_prompt: str = QUESTION_SYSTEM_PROMPT,
         callbacks: list[BaseLLMCallback] | None = None,
         model_params: dict[str, Any] | None = None,

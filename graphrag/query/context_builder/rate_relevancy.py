@@ -9,8 +9,8 @@ from contextlib import nullcontext
 from typing import Any
 
 import numpy as np
-import tiktoken
 
+from graphrag.language_model.tokenizer import SingletonTokenizer
 from graphrag.language_model.protocol.base import ChatModel
 from graphrag.query.context_builder.rate_prompt import RATE_QUERY
 from graphrag.query.llm.text_utils import num_tokens, try_parse_json_object
@@ -22,7 +22,7 @@ async def rate_relevancy(
     query: str,
     description: str,
     model: ChatModel,
-    token_encoder: tiktoken.Encoding,
+    token_encoder: SingletonTokenizer,
     rate_query: str = RATE_QUERY,
     num_repeats: int = 1,
     semaphore: asyncio.Semaphore | None = None,

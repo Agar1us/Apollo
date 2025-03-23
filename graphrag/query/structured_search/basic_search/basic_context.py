@@ -4,8 +4,8 @@
 """Basic Context Builder implementation."""
 
 import pandas as pd
-import tiktoken
 
+from graphrag.language_model.tokenizer import SingletonTokenizer
 from graphrag.data_model.text_unit import TextUnit
 from graphrag.language_model.protocol.base import EmbeddingModel
 from graphrag.query.context_builder.builders import (
@@ -24,7 +24,7 @@ class BasicSearchContext(BasicContextBuilder):
         text_embedder: EmbeddingModel,
         text_unit_embeddings: BaseVectorStore,
         text_units: list[TextUnit] | None = None,
-        token_encoder: tiktoken.Encoding | None = None,
+        token_encoder: SingletonTokenizer | None = None,
         embedding_vectorstore_key: str = "id",
     ):
         self.text_embedder = text_embedder

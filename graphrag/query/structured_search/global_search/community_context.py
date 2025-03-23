@@ -5,8 +5,7 @@
 
 from typing import Any
 
-import tiktoken
-
+from graphrag.language_model.tokenizer import SingletonTokenizer
 from graphrag.data_model.community import Community
 from graphrag.data_model.community_report import CommunityReport
 from graphrag.data_model.entity import Entity
@@ -31,7 +30,7 @@ class GlobalCommunityContext(GlobalContextBuilder):
         community_reports: list[CommunityReport],
         communities: list[Community],
         entities: list[Entity] | None = None,
-        token_encoder: tiktoken.Encoding | None = None,
+        token_encoder: SingletonTokenizer | None = None,
         dynamic_community_selection: bool = False,
         dynamic_community_selection_kwargs: dict[str, Any] | None = None,
         random_state: int = 86,

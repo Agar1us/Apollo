@@ -12,8 +12,8 @@ from dataclasses import dataclass
 from typing import Any
 
 import pandas as pd
-import tiktoken
 
+from graphrag.language_model.tokenizer import SingletonTokenizer
 from graphrag.callbacks.query_callbacks import QueryCallbacks
 from graphrag.language_model.protocol.base import ChatModel
 from graphrag.prompts.query.global_search_knowledge_system_prompt import (
@@ -62,7 +62,7 @@ class GlobalSearch(BaseSearch[GlobalContextBuilder]):
         self,
         model: ChatModel,
         context_builder: GlobalContextBuilder,
-        token_encoder: tiktoken.Encoding | None = None,
+        token_encoder: SingletonTokenizer | None = None,
         map_system_prompt: str | None = None,
         reduce_system_prompt: str | None = None,
         response_type: str = "multiple paragraphs",

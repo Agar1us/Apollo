@@ -7,8 +7,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Any
 
-import tiktoken
-
+from graphrag.language_model.tokenizer import SingletonTokenizer
 from graphrag.language_model.protocol.base import ChatModel
 from graphrag.query.context_builder.builders import (
     GlobalContextBuilder,
@@ -34,7 +33,7 @@ class BaseQuestionGen(ABC):
         self,
         model: ChatModel,
         context_builder: GlobalContextBuilder | LocalContextBuilder,
-        token_encoder: tiktoken.Encoding | None = None,
+        token_encoder: SingletonTokenizer | None = None,
         model_params: dict[str, Any] | None = None,
         context_builder_params: dict[str, Any] | None = None,
     ):

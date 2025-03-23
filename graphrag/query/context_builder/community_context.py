@@ -8,7 +8,7 @@ import random
 from typing import Any, cast
 
 import pandas as pd
-import tiktoken
+from graphrag.language_model.tokenizer import SingletonTokenizer
 
 from graphrag.data_model.community_report import CommunityReport
 from graphrag.data_model.entity import Entity
@@ -24,7 +24,7 @@ NO_COMMUNITY_RECORDS_WARNING: str = (
 def build_community_context(
     community_reports: list[CommunityReport],
     entities: list[Entity] | None = None,
-    token_encoder: tiktoken.Encoding | None = None,
+    token_encoder: SingletonTokenizer | None = None,
     use_community_summary: bool = True,
     column_delimiter: str = "|",
     shuffle_data: bool = True,

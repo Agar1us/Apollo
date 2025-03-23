@@ -9,8 +9,8 @@ from typing import Any
 
 import numpy as np
 import pandas as pd
-import tiktoken
 
+from graphrag.language_model.tokenizer import SingletonTokenizer
 from graphrag.config.models.drift_search_config import DRIFTSearchConfig
 from graphrag.data_model.community_report import CommunityReport
 from graphrag.data_model.covariate import Covariate
@@ -46,7 +46,7 @@ class DRIFTSearchContextBuilder(DRIFTContextBuilder):
         reports: list[CommunityReport] | None = None,
         relationships: list[Relationship] | None = None,
         covariates: dict[str, list[Covariate]] | None = None,
-        token_encoder: tiktoken.Encoding | None = None,
+        token_encoder: SingletonTokenizer | None = None,
         embedding_vectorstore_key: str = EntityVectorStoreKey.ID,
         config: DRIFTSearchConfig | None = None,
         local_system_prompt: str | None = None,

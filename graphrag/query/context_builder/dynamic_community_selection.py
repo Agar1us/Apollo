@@ -10,8 +10,7 @@ from copy import deepcopy
 from time import time
 from typing import Any
 
-import tiktoken
-
+from graphrag.language_model.tokenizer import SingletonTokenizer
 from graphrag.data_model.community import Community
 from graphrag.data_model.community_report import CommunityReport
 from graphrag.language_model.protocol.base import ChatModel
@@ -34,7 +33,7 @@ class DynamicCommunitySelection:
         community_reports: list[CommunityReport],
         communities: list[Community],
         model: ChatModel,
-        token_encoder: tiktoken.Encoding,
+        token_encoder: SingletonTokenizer,
         rate_query: str = RATE_QUERY,
         use_summary: bool = False,
         threshold: int = 1,

@@ -7,8 +7,8 @@ from collections import defaultdict
 from typing import Any, cast
 
 import pandas as pd
-import tiktoken
 
+from graphrag.language_model.tokenizer import SingletonTokenizer
 from graphrag.data_model.covariate import Covariate
 from graphrag.data_model.entity import Entity
 from graphrag.data_model.relationship import Relationship
@@ -29,7 +29,7 @@ from graphrag.query.llm.text_utils import num_tokens
 
 def build_entity_context(
     selected_entities: list[Entity],
-    token_encoder: tiktoken.Encoding | None = None,
+    token_encoder: SingletonTokenizer | None = None,
     max_tokens: int = 8000,
     include_entity_rank: bool = True,
     rank_description: str = "number of relationships",
@@ -91,7 +91,7 @@ def build_entity_context(
 def build_covariates_context(
     selected_entities: list[Entity],
     covariates: list[Covariate],
-    token_encoder: tiktoken.Encoding | None = None,
+    token_encoder: SingletonTokenizer | None = None,
     max_tokens: int = 8000,
     column_delimiter: str = "|",
     context_name: str = "Covariates",
@@ -155,7 +155,7 @@ def build_covariates_context(
 def build_relationship_context(
     selected_entities: list[Entity],
     relationships: list[Relationship],
-    token_encoder: tiktoken.Encoding | None = None,
+    token_encoder: SingletonTokenizer | None = None,
     include_relationship_weight: bool = False,
     max_tokens: int = 8000,
     top_k_relationships: int = 10,

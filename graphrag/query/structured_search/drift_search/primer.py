@@ -13,6 +13,7 @@ import pandas as pd
 import tiktoken
 from tqdm.asyncio import tqdm_asyncio
 
+from graphrag.language_model.tokenizer import SingletonTokenizer
 from graphrag.config.models.drift_search_config import DRIFTSearchConfig
 from graphrag.data_model.community_report import CommunityReport
 from graphrag.language_model.protocol.base import ChatModel, EmbeddingModel
@@ -33,7 +34,7 @@ class PrimerQueryProcessor:
         chat_model: ChatModel,
         text_embedder: EmbeddingModel,
         reports: list[CommunityReport],
-        token_encoder: tiktoken.Encoding | None = None,
+        token_encoder: SingletonTokenizer | None = None,
     ):
         """
         Initialize the PrimerQueryProcessor.
@@ -42,7 +43,7 @@ class PrimerQueryProcessor:
             chat_llm (ChatOpenAI): The language model used to process the query.
             text_embedder (BaseTextEmbedding): The text embedding model.
             reports (list[CommunityReport]): List of community reports.
-            token_encoder (tiktoken.Encoding, optional): Token encoder for token counting.
+            token_encoder (SingletonTokenizer, optional): Token encoder for token counting.
         """
         self.chat_model = chat_model
         self.text_embedder = text_embedder
@@ -105,7 +106,7 @@ class DRIFTPrimer:
         self,
         config: DRIFTSearchConfig,
         chat_model: ChatModel,
-        token_encoder: tiktoken.Encoding | None = None,
+        token_encoder: SingletonTokenizer | None = None,
     ):
         """
         Initialize the DRIFTPrimer.
@@ -113,7 +114,7 @@ class DRIFTPrimer:
         Args:
             config (DRIFTSearchConfig): Configuration settings for DRIFT search.
             chat_llm (ChatOpenAI): The language model used for searching.
-            token_encoder (tiktoken.Encoding, optional): Token encoder for managing tokens.
+            token_encoder (SingletonTokenizer, optional): Token encoder for managing tokens.
         """
         self.chat_model = chat_model
         self.config = config

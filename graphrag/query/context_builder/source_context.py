@@ -7,8 +7,8 @@ import random
 from typing import Any, cast
 
 import pandas as pd
-import tiktoken
 
+from graphrag.language_model.tokenizer import SingletonTokenizer
 from graphrag.data_model.relationship import Relationship
 from graphrag.data_model.text_unit import TextUnit
 from graphrag.query.llm.text_utils import num_tokens
@@ -20,7 +20,7 @@ Contain util functions to build text unit context for the search's system prompt
 
 def build_text_unit_context(
     text_units: list[TextUnit],
-    token_encoder: tiktoken.Encoding | None = None,
+    token_encoder: SingletonTokenizer | None = None,
     column_delimiter: str = "|",
     shuffle_data: bool = True,
     max_tokens: int = 8000,

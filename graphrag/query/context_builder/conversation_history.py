@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from enum import Enum
 
 import pandas as pd
-import tiktoken
+from graphrag.language_model.tokenizer import SingletonTokenizer
 
 from graphrag.query.llm.text_utils import num_tokens
 
@@ -148,7 +148,7 @@ class ConversationHistory:
 
     def build_context(
         self,
-        token_encoder: tiktoken.Encoding | None = None,
+        token_encoder: SingletonTokenizer | None = None,
         include_user_turns_only: bool = True,
         max_qa_turns: int | None = 5,
         max_tokens: int = 8000,

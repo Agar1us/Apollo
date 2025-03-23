@@ -7,8 +7,8 @@ from copy import deepcopy
 from typing import Any
 
 import pandas as pd
-import tiktoken
 
+from graphrag.language_model.tokenizer import SingletonTokenizer
 from graphrag.data_model.community_report import CommunityReport
 from graphrag.data_model.covariate import Covariate
 from graphrag.data_model.entity import Entity
@@ -59,7 +59,7 @@ class LocalSearchMixedContext(LocalContextBuilder):
         community_reports: list[CommunityReport] | None = None,
         relationships: list[Relationship] | None = None,
         covariates: dict[str, list[Covariate]] | None = None,
-        token_encoder: tiktoken.Encoding | None = None,
+        token_encoder: SingletonTokenizer | None = None,
         embedding_vectorstore_key: str = EntityVectorStoreKey.ID,
     ):
         if community_reports is None:

@@ -11,8 +11,7 @@ from dataclasses import dataclass
 from typing import Any
 
 import networkx as nx
-import tiktoken
-from transformers import AutoTokenizer
+from graphrag.language_model.tokenizer import SingletonTokenizer
 
 from graphrag.config.defaults import ENCODING_MODEL, graphrag_config_defaults
 from graphrag.index.typing.error_handler import ErrorHandlerFn
@@ -91,15 +90,10 @@ class GraphExtractor:
         )
         self._on_error = on_error or (lambda _e, _s, _d: None)
 
-        # Construct the looping arguments
-        if encoding_model in tiktoken.registry.ENCODINGS or encoding_model=='':
-            encoding = tiktoken.get_encoding(encoding_model or ENCODING_MODEL)
-            yes = f"{encoding.encode('Y')[0]}"
-            no = f"{encoding.encode('N')[0]}"
-        else:
-            encoding = AutoTokenizer.from_pretrained(encoding_model)
-            yes = f"{encoding.encode('Y', add_special_tokens=False)[0]}"
-            no = f"{encoding.encode('N', add_special_tokens=False)[0]}"
+        # Construct the looping arguments        
+        encoding = SingletonTokenizer(encoding_model)
+        yes = f"{encoding.encode('Y')[0]}"
+        no = f"{encoding.encode('N')[0]}"
         self._loop_args = {"logit_bias": {yes: 100, no: 100}, "max_tokens": 1}
 
     async def __call__(

@@ -9,18 +9,18 @@ import re
 from collections.abc import Iterator
 from itertools import islice
 
-import tiktoken
 from json_repair import repair_json
 
+from graphrag.language_model.tokenizer import SingletonTokenizer
 import graphrag.config.defaults as defs
 
 log = logging.getLogger(__name__)
 
 
-def num_tokens(text: str, token_encoder: tiktoken.Encoding | None = None) -> int:
+def num_tokens(text: str, token_encoder: SingletonTokenizer | None = None) -> int:
     """Return the number of tokens in the given text."""
     if token_encoder is None:
-        token_encoder = tiktoken.get_encoding(defs.ENCODING_MODEL)
+        token_encoder = SingletonTokenizer(defs.ENCODING_MODEL)
     return len(token_encoder.encode(text))  # type: ignore
 
 
@@ -40,11 +40,11 @@ def batched(iterable: Iterator, n: int):
 
 
 def chunk_text(
-    text: str, max_tokens: int, token_encoder: tiktoken.Encoding | None = None
+    text: str, max_tokens: int, token_encoder: SingletonTokenizer | None = None
 ):
     """Chunk text by token length."""
     if token_encoder is None:
-        token_encoder = tiktoken.get_encoding(defs.ENCODING_MODEL)
+        token_encoder = SingletonTokenizer(defs.ENCODING_MODEL)
     tokens = token_encoder.encode(text)  # type: ignore
     chunk_iterator = batched(iter(tokens), max_tokens)
     yield from (token_encoder.decode(list(chunk)) for chunk in chunk_iterator)

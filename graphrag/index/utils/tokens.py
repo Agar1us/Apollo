@@ -5,8 +5,7 @@
 
 import logging
 
-import tiktoken
-from transformers import AutoTokenizer
+from graphrag.language_model.tokenizer import SingletonTokenizer
 
 import graphrag.config.defaults as defs
 
@@ -19,35 +18,13 @@ def num_tokens_from_string(
     string: str, model: str | None = None, encoding_name: str | None = None
 ) -> int:
     """Return the number of tokens in a text string."""
-    if model is not None:
-        try:
-            encoding = tiktoken.encoding_for_model(model)
-        except KeyError:
-            # msg = f"Failed to get encoding for {model} when getting num_tokens_from_string. Fall back to default encoding {DEFAULT_ENCODING_NAME}"
-            # log.warning(msg)
-            # encoding = tiktoken.get_encoding(DEFAULT_ENCODING_NAME)
-            encoding = AutoTokenizer.from_pretrained(model)
-    else:
-        encoding = tiktoken.get_encoding(encoding_name or DEFAULT_ENCODING_NAME) 
-    if isinstance(encoding, tiktoken.Encoding):
-        num_tokens = len(encoding.encode(string))
-    else:
-        num_tokens = len(encoding.encode(string, add_special_tokens=False))
-    return num_tokens
+    encoding = SingletonTokenizer(model or encoding_name)
+    return len(encoding.encode(string))
 
 
 def string_from_tokens(
     tokens: list[int], model: str | None = None, encoding_name: str | None = None
 ) -> str:
     """Return a text string from a list of tokens."""
-    if model is not None:
-        try:
-            encoding = tiktoken.encoding_for_model(model)
-        except KeyError:
-            encoding = AutoTokenizer.from_pretrained(model)
-    elif encoding_name is not None:
-        encoding = tiktoken.get_encoding(encoding_name)
-    else:
-        msg = "Either model or encoding_name must be specified."
-        raise ValueError(msg)
+    encoding = SingletonTokenizer(model or encoding_name)
     return encoding.decode(tokens)

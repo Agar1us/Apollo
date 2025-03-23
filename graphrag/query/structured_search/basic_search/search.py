@@ -8,8 +8,7 @@ import time
 from collections.abc import AsyncGenerator
 from typing import Any
 
-import tiktoken
-
+from graphrag.language_model.tokenizer import SingletonTokenizer
 from graphrag.callbacks.query_callbacks import QueryCallbacks
 from graphrag.language_model.protocol.base import ChatModel
 from graphrag.prompts.query.basic_search_system_prompt import (
@@ -38,7 +37,7 @@ class BasicSearch(BaseSearch[BasicContextBuilder]):
         self,
         model: ChatModel,
         context_builder: BasicContextBuilder,
-        token_encoder: tiktoken.Encoding | None = None,
+        token_encoder: SingletonTokenizer | None = None,
         system_prompt: str | None = None,
         response_type: str = "multiple paragraphs",
         callbacks: list[QueryCallbacks] | None = None,

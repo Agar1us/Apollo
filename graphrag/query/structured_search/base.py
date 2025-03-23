@@ -9,8 +9,8 @@ from dataclasses import dataclass
 from typing import Any, Generic, TypeVar
 
 import pandas as pd
-import tiktoken
 
+from graphrag.language_model.tokenizer import SingletonTokenizer
 from graphrag.language_model.protocol.base import ChatModel
 from graphrag.query.context_builder.builders import (
     BasicContextBuilder,
@@ -58,7 +58,7 @@ class BaseSearch(ABC, Generic[T]):
         self,
         model: ChatModel,
         context_builder: T,
-        token_encoder: tiktoken.Encoding | None = None,
+        token_encoder: SingletonTokenizer | None = None,
         model_params: dict[str, Any] | None = None,
         context_builder_params: dict[str, Any] | None = None,
     ):

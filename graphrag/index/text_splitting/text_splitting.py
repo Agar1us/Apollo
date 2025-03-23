@@ -10,10 +10,10 @@ from dataclasses import dataclass
 from typing import Any, Literal, cast
 
 import pandas as pd
-import tiktoken
-from transformers import AutoTokenizer
+
 
 import graphrag.config.defaults as defs
+from graphrag.language_model.tokenizer import SingletonTokenizer
 from graphrag.index.operations.chunk_text.typing import TextChunk
 from graphrag.logger.progress import ProgressTicker
 
@@ -97,29 +97,18 @@ class TokenTextSplitter(TextSplitter):
     ):
         """Init method definition."""
         super().__init__(**kwargs)
-        if model_name is not None:
-            try:
-                enc = tiktoken.encoding_for_model(model_name)
-            except KeyError:
-                # log.exception("Model %s not found, using %s", model_name, encoding_name)
-                enc = AutoTokenizer.from_pretrained(model_name)
-        else:
-            enc = tiktoken.get_encoding(encoding_name)
+        enc = SingletonTokenizer(model_name or encoding_name)
         self._tokenizer = enc
         self._allowed_special = allowed_special or set()
         self._disallowed_special = disallowed_special
 
     def encode(self, text: str) -> list[int]:
         """Encode the given text into an int-vector."""
-        if isinstance(self._tokenizer, tiktoken.Encoding):
-            encoding_text = self._tokenizer.encode(
+        return self._tokenizer.encode(
                 text,
                 allowed_special=self._allowed_special,
                 disallowed_special=self._disallowed_special,
             )
-        else:
-            encoding_text = self._tokenizer.encode(text, add_special_tokens=False)
-        return encoding_text
         
     def num_tokens(self, text: str) -> int:
         """Return the number of tokens in a string."""

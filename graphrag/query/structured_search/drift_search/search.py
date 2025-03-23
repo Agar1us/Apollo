@@ -8,9 +8,9 @@ import time
 from collections.abc import AsyncGenerator
 from typing import Any
 
-import tiktoken
 from tqdm.asyncio import tqdm_asyncio
 
+from graphrag.language_model.tokenizer import SingletonTokenizer
 from graphrag.callbacks.query_callbacks import QueryCallbacks
 from graphrag.language_model.protocol.base import ChatModel
 from graphrag.query.context_builder.conversation_history import ConversationHistory
@@ -35,7 +35,7 @@ class DRIFTSearch(BaseSearch[DRIFTSearchContextBuilder]):
         self,
         model: ChatModel,
         context_builder: DRIFTSearchContextBuilder,
-        token_encoder: tiktoken.Encoding | None = None,
+        token_encoder: SingletonTokenizer | None = None,
         query_state: QueryState | None = None,
         callbacks: list[QueryCallbacks] | None = None,
     ):
@@ -46,7 +46,7 @@ class DRIFTSearch(BaseSearch[DRIFTSearchContextBuilder]):
             llm (ChatOpenAI): The language model used for searching.
             context_builder (DRIFTSearchContextBuilder): Builder for search context.
             config (DRIFTSearchConfig, optional): Configuration settings for DRIFTSearch.
-            token_encoder (tiktoken.Encoding, optional): Token encoder for managing tokens.
+            token_encoder (SingletonTokenizer, optional): Token encoder for managing tokens.
             query_state (QueryState, optional): State of the current search query.
         """
         super().__init__(model, context_builder, token_encoder)

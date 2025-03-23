@@ -6,8 +6,7 @@
 from collections.abc import Iterable
 
 import nltk
-import tiktoken
-from transformers import AutoTokenizer
+from graphrag.language_model.tokenizer import SingletonTokenizer
 from graphrag.config.models.chunking_config import ChunkingConfig
 from graphrag.index.operations.chunk_text.typing import TextChunk
 from graphrag.index.text_splitting.text_splitting import (
@@ -19,18 +18,12 @@ from graphrag.logger.progress import ProgressTicker
 
 def get_encoding_fn(encoding_name):
     """Get the encoding model."""
-    try:
-        enc = tiktoken.get_encoding(encoding_name)
-    except ValueError:
-        enc = AutoTokenizer.from_pretrained(encoding_name)
-
+    enc = SingletonTokenizer(encoding_name)
+    
     def encode(text: str) -> list[int]:
         if not isinstance(text, str):
             text = f"{text}"
-        if isinstance(enc, tiktoken.Encoding):
-            return enc.encode(text)
-        else:
-            return enc.encode(text, add_special_tokens=False)
+        return enc.encode(text)
 
     def decode(tokens: list[int]) -> str:
         return enc.decode(tokens)

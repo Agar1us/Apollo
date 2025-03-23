@@ -3,7 +3,6 @@
 
 """Query Factory methods to support CLI."""
 
-import tiktoken
 
 from graphrag.callbacks.query_callbacks import QueryCallbacks
 from graphrag.config.models.graph_rag_config import GraphRagConfig
@@ -14,6 +13,7 @@ from graphrag.data_model.entity import Entity
 from graphrag.data_model.relationship import Relationship
 from graphrag.data_model.text_unit import TextUnit
 from graphrag.language_model.manager import ModelManager
+from graphrag.language_model.tokenizer import SingletonTokenizer
 from graphrag.query.context_builder.entity_extraction import EntityVectorStoreKey
 from graphrag.query.structured_search.basic_search.basic_context import (
     BasicSearchContext,
@@ -73,7 +73,7 @@ def get_local_search_engine(
         config=embedding_settings,
     )
 
-    token_encoder = tiktoken.get_encoding(model_settings.encoding_model)
+    token_encoder = SingletonTokenizer(model_settings.encoding_model)
 
     ls_config = config.local_search
 
@@ -144,7 +144,7 @@ def get_global_search_engine(
     )
 
     # Here we get encoding based on specified encoding name
-    token_encoder = tiktoken.get_encoding(model_settings.encoding_model)
+    token_encoder = SingletonTokenizer(model_settings.encoding_model)
     gs_config = config.global_search
 
     dynamic_community_selection_kwargs = {}
@@ -154,7 +154,7 @@ def get_global_search_engine(
         dynamic_community_selection_kwargs.update({
             "model": model,
             # And here we get encoding based on model
-            "token_encoder": tiktoken.encoding_for_model(model_settings.model),
+            "token_encoder": model_settings.encoding_model,
             "keep_parent": gs_config.dynamic_search_keep_parent,
             "num_repeats": gs_config.dynamic_search_num_repeats,
             "use_summary": gs_config.dynamic_search_use_summary,
@@ -253,7 +253,7 @@ def get_drift_search_engine(
         model_type=embedding_model_settings.type,
         config=embedding_model_settings,
     )
-    token_encoder = tiktoken.get_encoding(chat_model_settings.encoding_model)
+    token_encoder = SingletonTokenizer(chat_model_settings.encoding_model)
 
     return DRIFTSearch(
         model=chat_model,
@@ -308,7 +308,7 @@ def get_basic_search_engine(
         config=embedding_model_settings,
     )
 
-    token_encoder = tiktoken.get_encoding(chat_model_settings.encoding_model)
+    token_encoder = SingletonTokenizer(chat_model_settings.encoding_model)
 
     ls_config = config.basic_search
 
