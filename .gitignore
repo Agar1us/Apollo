@@ -41,7 +41,9 @@ ragtest/
 .ragtest/
 .pipelines
 .pipeline
-
+test_vlad/
+tinkoff/
+tinkoff_full/
 
 # mkdocs
 site/

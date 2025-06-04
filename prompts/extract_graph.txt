@@ -1,0 +1,93 @@
+
+-Goal-
+Given a text document that is potentially relevant to this activity and a list of entity types, identify all entities of those types from the text and all relationships among the identified entities.
+
+-Steps-
+1. Identify all entities. For each identified entity, extract the following information:
+- entity_name: Name of the entity, capitalized
+- entity_type: One of the following types: [bank, recipient, support service, manager, document, payment order, legal entity, branch, computer, software, certificate, public key, private key, password, root certificate, digital signature, limit order, price, asset, stock exchange, investor, lot, liquidity, broker account, QR code, payment method, cash register, cashier, buyer, overnight deposit, interest, seller, automatic response, neural network, refund, internet acquiring, commission, report, credit, loan, scanner, barcode, marking code, fiscalization, token, module, installment, tax system, entrepreneur, limited liability company, financial report, sitemap, terminal key, secret key]
+- entity_description: Comprehensive description of the entity's attributes and activities
+Format each entity as ("entity"{tuple_delimiter}<entity_name>{tuple_delimiter}<entity_type>{tuple_delimiter}<entity_description>)
+
+2. From the entities identified in step 1, identify all pairs of (source_entity, target_entity) that are *clearly related* to each other.
+For each pair of related entities, extract the following information:
+- source_entity: name of the source entity, as identified in step 1
+- target_entity: name of the target entity, as identified in step 1
+- relationship_description: explanation as to why you think the source entity and the target entity are related to each other
+- relationship_strength: an integer score between 1 to 10, indicating strength of the relationship between the source entity and target entity
+Format each relationship as ("relationship"{tuple_delimiter}<source_entity>{tuple_delimiter}<target_entity>{tuple_delimiter}<relationship_description>{tuple_delimiter}<relationship_strength>)
+
+3. Return output in russian as a single list of all the entities and relationships identified in steps 1 and 2. Use **{record_delimiter}** as the list delimiter.
+
+4. If you have to translate into russian, just translate the descriptions, nothing else!
+
+5. When finished, output {completion_delimiter}.
+
+-Examples-
+######################
+
+Example 1:
+
+entity_types: [bank, recipient, support service, manager, document, payment order, legal entity, branch, computer, software, certificate, public key, private key, password, root certificate, digital signature, limit order, price, asset, stock exchange, investor, lot, liquidity, broker account, QR code, payment method, cash register, cashier, buyer, overnight deposit, interest, seller, automatic response, neural network, refund, internet acquiring, commission, report, credit, loan, scanner, barcode, marking code, fiscalization, token, module, installment, tax system, entrepreneur, limited liability company, financial report, sitemap, terminal key, secret key]
+text:
+По закону банк отправляет деньги получателю в течение двух банковских дней Банковский (операционный) день — часть дня, когда банк занимается расчетно-кассовым обслуживанием и проводит платежные операции . Сколько времени идет платеж Если прошло больше двух дней, но деньги так и не пришли, независимо от того, кто получатель — вы или ваш контрагент, напишите в чат поддержки Тинькофф Бизнеса или позвоните по телефону 8 800 700‑66‑66. Чтобы менеджеры быстрее разобрались в проблеме, пришлите документы, которые покажут, кто, когда и какую сумму переводил, — например, платежное поручение с отметкой «Исполнено». Как скачать платежку
+------------------------
+output:
+("entity"{tuple_delimiter}БАНК{tuple_delimiter}bank{tuple_delimiter}Банк осуществляет перевод денег получателю в течение двух банковских дней и занимается расчетно-кассовым обслуживанием)
+{record_delimiter}
+("entity"{tuple_delimiter}ПОЛУЧАТЕЛЬ{tuple_delimiter}recipient{tuple_delimiter}Получатель — это лицо или организация, которой банк переводит деньги)
+{record_delimiter}
+("entity"{tuple_delimiter}ЧАТ ПОДДЕРЖКИ ТИНЬКОФФ БИЗНЕСА{tuple_delimiter}support service{tuple_delimiter}Служба поддержки, куда можно обратиться, если платеж не поступил в течение двух дней)
+{record_delimiter}
+("entity"{tuple_delimiter}МЕНЕДЖЕР{tuple_delimiter}manager{tuple_delimiter}Менеджер помогает разобраться в проблеме с платежом)
+{record_delimiter}
+("entity"{tuple_delimiter}ДОКУМЕНТ{tuple_delimiter}document{tuple_delimiter}Документы, подтверждающие перевод денег, например платежное поручение)
+{record_delimiter}
+("entity"{tuple_delimiter}ПЛАТЕЖНОЕ ПОРУЧЕНИЕ{tuple_delimiter}payment order{tuple_delimiter}Документ, подтверждающий выполнение платежа, с отметкой «Исполнено»)
+{record_delimiter}
+("relationship"{tuple_delimiter}БАНК{tuple_delimiter}ПОЛУЧАТЕЛЬ{tuple_delimiter}Банк отправляет деньги получателю{tuple_delimiter}8)
+{record_delimiter}
+("relationship"{tuple_delimiter}ЧАТ ПОДДЕРЖКИ ТИНЬКОФФ БИЗНЕСА{tuple_delimiter}МЕНЕДЖЕР{tuple_delimiter}Менеджеры работают в службе поддержки и помогают решать проблемы{tuple_delimiter}7)
+{record_delimiter}
+("relationship"{tuple_delimiter}МЕНЕДЖЕР{tuple_delimiter}ДОКУМЕНТ{tuple_delimiter}Менеджер запрашивает документы для решения проблемы{tuple_delimiter}6)
+{record_delimiter}
+("relationship"{tuple_delimiter}ДОКУМЕНТ{tuple_delimiter}ПЛАТЕЖНОЕ ПОРУЧЕНИЕ{tuple_delimiter}Платежное поручение является одним из документов, подтверждающих перевод{tuple_delimiter}9)
+{record_delimiter}
+("relationship"{tuple_delimiter}БАНК{tuple_delimiter}ЧАТ ПОДДЕРЖКИ ТИНЬКОФФ БИЗНЕСА{tuple_delimiter}Банк предоставляет клиентам доступ к чату поддержки{tuple_delimiter}5)
+{completion_delimiter}
+#############################
+
+
+Example 2:
+
+entity_types: [bank, recipient, support service, manager, document, payment order, legal entity, branch, computer, software, certificate, public key, private key, password, root certificate, digital signature, limit order, price, asset, stock exchange, investor, lot, liquidity, broker account, QR code, payment method, cash register, cashier, buyer, overnight deposit, interest, seller, automatic response, neural network, refund, internet acquiring, commission, report, credit, loan, scanner, barcode, marking code, fiscalization, token, module, installment, tax system, entrepreneur, limited liability company, financial report, sitemap, terminal key, secret key]
+text:
+Это можно сделать в личном кабинете Jump.Finance: Войдите в раздел «Настройки» → «Общие» → «Юрлица и филиалы» и выберите нужное юрлицо. Обратите внимание, что у одного юрлица может быть несколько филиалов. В открытом окне нажмите на «Добавить». Внесите информацию о филиале и нажмите на «Добавить». Теперь филиал отображается в юрлице, куда вы его добавили. Как редактировать филиал
+------------------------
+output:
+("entity"{tuple_delimiter}JUMP.FINANCE{tuple_delimiter}bank{tuple_delimiter}Jump.Finance - это банк, предоставляющий услуги через личный кабинет, включая управление юридическими лицами и филиалами)
+{record_delimiter}
+("entity"{tuple_delimiter}ЛИЧНЫЙ КАБИНЕТ{tuple_delimiter}software{tuple_delimiter}Личный кабинет Jump.Finance - это программное обеспечение для управления настройками, юридическими лицами и филиалами)
+{record_delimiter}
+("entity"{tuple_delimiter}ЮРЛИЦО{tuple_delimiter}legal entity{tuple_delimiter}Юридическое лицо - это организация, зарегистрированная в Jump.Finance, которая может иметь несколько филиалов)
+{record_delimiter}
+("entity"{tuple_delimiter}ФИЛИАЛ{tuple_delimiter}branch{tuple_delimiter}Филиал - это подразделение юридического лица, которое можно добавлять и редактировать в личном кабинете Jump.Finance)
+{record_delimiter}
+("relationship"{tuple_delimiter}JUMP.FINANCE{tuple_delimiter}ЛИЧНЫЙ КАБИНЕТ{tuple_delimiter}Jump.Finance предоставляет доступ к личному кабинету для управления настройками{tuple_delimiter}8)
+{record_delimiter}
+("relationship"{tuple_delimiter}ЛИЧНЫЙ КАБИНЕТ{tuple_delimiter}ЮРЛИЦО{tuple_delimiter}В личном кабинете можно управлять юридическими лицами{tuple_delimiter}7)
+{record_delimiter}
+("relationship"{tuple_delimiter}ЮРЛИЦО{tuple_delimiter}ФИЛИАЛ{tuple_delimiter}У одного юридического лица может быть несколько филиалов{tuple_delimiter}9)
+{record_delimiter}
+("relationship"{tuple_delimiter}ЛИЧНЫЙ КАБИНЕТ{tuple_delimiter}ФИЛИАЛ{tuple_delimiter}В личном кабинете можно добавлять и редактировать филиалы{tuple_delimiter}8)
+{completion_delimiter}
+#############################
+
+
+
+-Real Data-
+######################
+entity_types: [bank, recipient, support service, manager, document, payment order, legal entity, branch, computer, software, certificate, public key, private key, password, root certificate, digital signature, limit order, price, asset, stock exchange, investor, lot, liquidity, broker account, QR code, payment method, cash register, cashier, buyer, overnight deposit, interest, seller, automatic response, neural network, refund, internet acquiring, commission, report, credit, loan, scanner, barcode, marking code, fiscalization, token, module, installment, tax system, entrepreneur, limited liability company, financial report, sitemap, terminal key, secret key]
+text: {input_text}
+######################
+output:
